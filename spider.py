@@ -27,8 +27,7 @@ class Spider():
     }
     self.userAgent="Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36"
     self.headers = {
-      'user-agent': self.userAgent,
-      'Content-Type': 'text/html;charset=utf-8'
+      'user-agent': self.userAgent
     }
     pass
   def setPos(self,lat,lon):
@@ -49,19 +48,21 @@ class Spider():
     newsStruct={
       'code':code
     }
-    with requests.get('https://e.weather.com.cn/mpub/new_wap/%s.htm?_=%d'%(code,timestamp)) as res:
+    print('https://e.weather.com.cn/mpub/new_wap/%s.htm?_=%d'%(code,timestamp),5555555555555555555555)
+    with requests.get('https://e.weather.com.cn/mpub/new_wap/%s.htm?_=%d'%(code,timestamp),headers=self.headers) as res:
       text=res.content.decode(encoding='utf-8',errors='ignore')
-      print(text)
       reg=re.compile('.*?\"articles\"\:\[(.*?)\]}.*?',re.S)
       mstr=reg.findall(text)
+      print(mstr)
       newsD=json.loads(mstr[0])
       newsStruct={**newsStruct,**newsD}
       with requests.get('https://e.weather.com.cn%s'%(newsStruct['urls']),headers=self.headers) as resa:
-        print(resa.content)
-        textd=resa.content.decode('utf-8')
+        textd=resa.content.decode(encoding='utf-8',errors='ignore')
         regd=re.compile('.*?\<div class=\"news-detail\"\>(.*?)\s*?</div>\s*<div class="sixd-box-ad">.*?',re.S)
         mstrd=regd.findall(textd)
-        print(mstrd[0].encode('utf-8').decode('utf-8'),88888888888888)
+        newsStruct['html']=mstrd[0]
+        return newsStruct;
+        print(newsStruct,88888888888888)
   def getChartData(self,wedatac):
     wedata=wedatac['od2']
     whdataD = {
@@ -146,6 +147,7 @@ class Spider():
       citylist=json.loads(mstr[0])
       code=self.getCityCodeByCity(cityarr,citylist)
       citycode=code['ref'].split('~')[0]
+      self.setCityCode(citycode)
       self.url='http://www.weather.com.cn/weather1d/%s.shtml'%(citycode)
       print(self.url,77777777777)
       with requests.get(self.url,headers=self.headers) as rests:
@@ -159,4 +161,4 @@ if(__name__=='__main__'):
   spider=Spider()
   spider.setPos(39.90469,116.40717)
   spider.setCityCode('101011600')
-  text=spider.getLifeInfo()
+  text=spider.getNewsDataByCode()

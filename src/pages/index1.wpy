@@ -415,7 +415,6 @@
             }, 0)
             break;
         }
-        console.warn(tab);
       },
       convertwxweather(){
         return JSON.stringify(this.wxweather)
@@ -538,7 +537,6 @@
               self.wxweathernews.currentNews=res.data.titles;
               self.wxweathernews.newsContent=encodeURIComponent(res.data.html);
               self.wxweathernews.json=JSON.stringify(self.wxweathernews);
-              console.log(res.data, 888888888888888888888)
             },
             fail(res) {
               console.warn(res, 'error444444444444444')
@@ -554,7 +552,6 @@
       callGDApiByPos(pos) {
         self = this;
         let cicleNews=self.getUpdatedNews();
-        console.warn(self.$parent, 55555555555555)
         this.wxpos = pos;
         wx.request({
           url: 'https://yxy311.cn/wxc/api/',
@@ -573,7 +570,6 @@
             self.wxweatherjson=self.convertwxweather(self.wxweather)
             self.forecasts.days = ['今天', '明天', '后天', '大后天'];
             cicleNews()
-            console.log(res.data, 3333333333)
           },
           fail(res) {
             console.warn(res, 'error444444444444444')
