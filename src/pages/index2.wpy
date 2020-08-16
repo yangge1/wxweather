@@ -9,8 +9,8 @@
       background-image: url(https://yxy311.cn/upload/ybg.png);
       background-position: 0 0;
       background-repeat: no-repeat;
-      background-size: 750rpx 665rpx;
-      height: 665rpx;
+      background-size: 750rpx 460rpx;
+      height: 460rpx;
       .date_component{
         width:154px;
         position: absolute;
@@ -82,6 +82,47 @@
 
         }
       }
+      .tseek_tody_weather2_info{
+        display: flex;
+        color: #fff;
+        flex-wrap: wrap;
+        .tseek_tody_weather2_info_item{
+          width: 50%;
+          display: flex;
+          .jiagshui-div{
+            width: 50%;
+            &.jiagshui-img{
+              text-align: center;
+            }
+            image{
+              width: 36px;
+              height: 36px;
+
+            }
+          }
+        }
+      }
+      .tseek_tody_weather2_info_sh{
+        color: #f00;
+        display: flex;
+        flex-wrap: wrap;
+        .tseek_tody_weather2_info_item{
+          width: 33.33%;
+          white-space: nowrap;
+
+          .zhishus-icon{
+            vertical-align: middle;
+            display: inline-block;
+          }
+          .zhishus-div{
+            vertical-align: middle;
+            display: inline-block;
+            width: 30%;
+            white-space: normal;
+            word-break: break-all;
+          }
+        }
+      }
     }
   }
 
@@ -108,29 +149,26 @@
           <view class="tseek_weather_info_temp_wt">{{wxweather.weather}}</view>
           
         </div>
-        <div class="tseek_tody_weather">
-          <div class="tseek_tody_weather_div_icon">
-            <i class="icon_w {{weatherIcon}} size_page1_class"></i>
-          </div>
-          <div class="tseek_tody_weather_div_rect">
-            <span>{{wxweather.winddirection}}风 {{wxweather.windpower}}级</span>
-          </div>
-          <div class="tseek_tody_weather_div_rect">
-            <span>相对湿度 {{wxweather.humidity}}</span>
-          </div>
-        </div>
         <div class="tseek_tody_weather2_info">
             <div v-for="info in dayinfo.jiagshui" class="tseek_tody_weather2_info_item">
-              <div class="image-src">{{info.img}}</div>
-              <div class="image-src">{{info.name}}</div>
-              <div class="image-src">{{info.time}}</div>
+              <div class="jiagshui-div jiagshui-img">
+                <img src="{{info.img}}" alt=""/>             
+              </div>
+              <div class="jiagshui-div">
+                <div class="jiagshui-name">{{info.name}}</div>
+                <div class="jiagshui-title">{{info.time}}</div>          
+              </div>
+              
             </div>
         </div>
         <div class="tseek_tody_weather2_info_sh">
           <div v-for="sh in dayinfo.zhishus" class="tseek_tody_weather2_info_item">
-            <div class="image-src">{{sh.iconcls}}</div>
-            <div class="image-src">{{sh.title}}</div>
-            <div class="image-src">{{sh.name}}</div>
+            <div class="zhishus-icon icon_info {{sh.iconcls}} {{sh.picon}}"></div>
+            <div class="zhishus-div">
+              <div class="zhishus-title">{{sh.title}}</div>
+              <div class="zhishus-name">{{sh.name}}</div>          
+            </div>
+            
           </div>
         </div>
       </div>
@@ -186,6 +224,11 @@
       },
     },
     methods: {
+      converIcons(zhufus){
+        _.each(zhufus,(item,index)=>{
+          item.picon=`picon-${Math.floor(index/3)}`
+        })
+      },
       callGDApiByPos() {
         self = this;
         wx.request({
@@ -195,7 +238,7 @@
           },
           success(res) {
             self.dayinfo = res.data;
-
+            self.converIcons(self.dayinfo.zhishus)
           },
           fail(res) {
             console.warn(res, 'error444444444444444')

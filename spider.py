@@ -74,7 +74,7 @@ class Spider():
       'windAngle': [],
       'windDirection': [],
     }
-    for x in range(0,25):
+    for x in range(0,24):
       r = wedata[x]
 
       whdataD['data'].append(r['od21'])

@@ -114,8 +114,7 @@ def wxc_api_getnews():
     print(8888888888888888888888)
     return robot.getNewsDataByCode()
 @app.route('/wxc/api/getdayinfo', methods=['GET'])
-def get_day_info():
-  def getLifeInfo(self):
+def getLifeInfo():
     return robot.getLifeInfo()
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=3001, debug=True,ssl_context=('/home/yuxingyang/1_www.yxy311.cn_bundle.pem', '/etc/nginx/2_www.yxy311.cn.key'))
