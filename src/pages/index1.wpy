@@ -1,0 +1,646 @@
+<style lang="less">
+  @import '../style/icon.less';
+
+  .tseek_index1 {
+
+    .tseek_body {
+      padding: 10rpx;
+      padding-top: 20rpx;
+      background-image: url(https://yxy311.cn/upload/ybg.png);
+      background-position: 0 0;
+      background-repeat: no-repeat;
+      background-size: 750rpx 665rpx;
+      height: 665rpx;
+      .date_component{
+        width:154px;
+        position: absolute;
+        right:10px;
+        top:40px;
+      }
+
+      .tseek_weather_canvas_tab {
+        margin-top: 30px;
+        .tseek_weather_canvas_tab_item {
+          display: flex;
+          justify-content: space-around;
+
+          .tseek_weather_canvas_tab_key {
+            padding: 5px 20px;
+            font-size: 12px;
+            color: #ccc;
+
+            &.active {
+              border-bottom: 2px solid #f78;
+              color: #f78;
+            }
+          }
+        }
+        .tseek_weather_canvas_tab_content{
+          width:365px;
+          height:300px;
+        }
+        canvas {
+          width: 365px;
+          height: 300px;
+        }
+      }
+
+      .tseek_locate {
+        .tseek_locate_text {
+          display: flex;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          font-size: 12px;
+
+          view {
+            color: #fff;
+            margin-left: 10rpx;
+
+            &.tseek_icon_bg_i_dropdown {
+              margin-top: 8rpx;
+            }
+
+            &.tseek_weather_time_txt {
+              margin-left: 25rpx;
+              color: rgba(255, 255, 255, .5)
+            }
+
+            &.tseek_icon_bg_i_refresh {
+              margin-top: 4rpx;
+
+            }
+          }
+        }
+      }
+
+      .tseek_weather {
+        color: #fff;
+        font-size:12px;
+        .wx-wea-news {
+          height: 26px;
+          line-height: 26px;
+          .tseek_read_weather_news_txt{
+            padding: 5px 10px;
+            background-color: rgba(0,0,0,.2);
+            padding-right: 54px;
+            position:relative;
+            border-radius: 5px;
+            .icon_bg_i_white_right{
+              position:absolute;
+              right: 10px;
+              top: 6px;
+
+            }
+          }
+        }
+
+        .tseek_weather_info {
+          color: #fff;
+          display: flex;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+
+          .tseek_weather_info_temp {
+            font-size: 180rpx;
+            margin-left: 20rpx;
+          }
+
+          .tseek_weather_info_temp_sign {
+            margin-top: 20rpx;
+            margin-left: -17rpx;
+            font-size: 25px;
+
+          }
+
+          .tseek_weather_info_temp_wt {
+            margin-top: 148rpx;
+            margin-left: -28rpx;
+
+          }
+
+          .tseek_weather_info_temp_sign1 {
+            margin-top: 153rpx;
+            margin-left: 21rpx;
+
+          }
+
+          .tseek_read_weather {
+            display:none;
+            height: 80rpx;
+            line-height: 80rpx;
+            padding: 0rpx 15rpx;
+            margin-top: 90rpx;
+            border: 1rpx solid rgba(255, 255, 255, 0.6);
+            border-radius: 22rpx;
+            margin-left: 48rpx;
+
+          }
+        }
+
+        .tseek_tody_weather {
+          display: flex;
+          justify-content: space-around;
+          margin-top: 40rpx;
+
+          .tseek_tody_weather_div_icon {
+            .icon_w.n00 {
+              transform: scale(2.2);
+              margin-top: 22rpx;
+            }
+          }
+
+          .tseek_tody_weather_div_rect {
+            padding: 5px;
+            background-color: rgba(255, 255, 255, 0.15);
+          }
+        }
+
+        .tseek_forecasts_weather {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 42rpx;
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+  <div class="tseek_index1">
+    <div class="tseek_body" style="background-image:url({{weatherImage}})">
+      <div class="date_component">
+        <datec></datec>
+      </div>
+      <div class="tseek_locate">
+        <span class="tseek_locate_text">
+          <i class="icon icon_bg_i_loca"></i>
+          <em>{{wxweather.province}}</em><em>{{wxweather.city}}</em>
+          <view class="icon icon_bg_i_dropdown tseek_icon_bg_i_dropdown"></view>
+          <view class="tseek_weather_time_txt">{{revertReportTime}} 更新</view>
+          <i class="icon icon_bg_i_refresh tseek_icon_bg_i_refresh"></i>
+        </span>
+      </div>
+      <div class="tseek_weather">
+        <div class="tseek_weather_info">
+          <view class="tseek_weather_info_temp">{{wxweather.temperature}}</view>
+          <view class="tseek_weather_info_temp_sign">℃</view>
+
+          <view class="tseek_weather_info_temp_wt">{{wxweather.weather}}</view>
+          <navigator class="tseek_weather_info_temp_sign1" url="./index2?wxweather={{wxweatherjson}}">
+            <i class="icon icon_bg_i_right_menu"></i>
+          </navigator>
+          
+        </div>
+        <div class="wx-wea-news">
+          <navigator v-if="wxweathernews.currentNews" class="tseek_read_weather_news" url="./news?html={{wxweathernews.newsContent}}">
+            <span class="tseek_read_weather_news_txt">{{wxweathernews.currentNews}}<i class="icon icon_bg_i_white_right"></i></span>
+          </navigator>
+        </div>
+        <div class="tseek_tody_weather">
+          <div class="tseek_tody_weather_div_icon">
+            <i class="icon_w {{weatherIcon}} size_page1_class"></i>
+          </div>
+          <div class="tseek_tody_weather_div_rect">
+            <span>{{wxweather.winddirection}}风 {{wxweather.windpower}}级</span>
+          </div>
+          <div class="tseek_tody_weather_div_rect">
+            <span>相对湿度 {{wxweather.humidity}}</span>
+          </div>
+        </div>
+        <div class="tseek_forecasts_weather">
+          <div v-for="forecast_weather in forecasts" class="tseek_forecast_weather">
+            <forecast-weather :forecast="forecast_weather"></forecast-weather>
+          </div>
+        </div>
+
+      </div>
+      <div class="tseek_weather_canvas_tab">
+        <div class="tseek_weather_canvas_tab_item">
+          <div v-for="(tab,indx) in weattabs.tabs" @tap="tabClick(indx,tab)"
+            class="tseek_weather_canvas_tab_key {{ [ tab.active ? 'active' : '' ] }}">{{tab.name}}</div>
+
+        </div>
+        <div class="tseek_weather_canvas_tab_content">
+          <div v-if="showChart" class="">
+            <canvas canvas-id="canvas3"></canvas>
+
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+  </div>
+
+</template>
+<script>
+  import wepy from '@wepy/core';
+  import _ from '../lib/underscore.min.js';
+  import F2 from '../lib/f2.min.js'
+  import Charts from '../lib/Charts.js'
+  const wdict = {
+    '00': ['晴', '晴间多云', '和风', '有风'],
+    '01': ['少云', '多云', '平静', '微风', '清风', '强风/劲风', '疾风', '大风', '烈风'],
+    '02': ['阴', '风暴', '狂爆风', '飓风', '热带风暴', '霾', '中度霾', '重度霾', '严重霾'],
+    '03': ['阵雨', '小雨', '中雨', '大雨', '暴雨', '大暴雨', '特大暴雨', '强阵雨', '极端降雨', '毛毛雨/细雨', '雨', '小雨-中雨', '中雨-大雨', '大雨-暴雨',
+      '暴雨-大暴雨', '大暴雨-特大暴雨', '雨雪天气'
+    ],
+    '04': ['雷阵雨', '雷阵雨并伴有冰雹', '强雷阵雨', '雨夹雪', '阵雨夹雪', '冻雨']
+  }
+  const iconDict = {
+    "晴": "00",
+    "多云": "01",
+    "阴": "02",
+    "阵雨": "03",
+    "雷阵雨": "04",
+    "雷阵雨并伴有冰雹": "05",
+    "雨夹雪": "06",
+    "小雨": "07",
+    "中雨": "08",
+    "大雨": "09",
+    "暴雨": "10",
+    "大暴雨": "11",
+    "特大暴雨": "12",
+    "阵雪": "13",
+    "小雪": 14,
+    "中雪": 15,
+    "大雪": 16,
+    "暴雪": 17,
+    "雾": 18,
+    "冻雨": 19,
+    "沙尘暴": 20,
+    "小雨-中雨": 21,
+    "中雨-大雨": 22,
+    "大雨-暴雨": 23,
+    "暴雨-大暴雨": 24,
+    "大暴雨-特大暴雨": 25,
+    "小雪-中雪": 26,
+    "中雪-大雪": 27,
+    "大雪-暴雪": 28,
+    "浮尘": 29,
+    "扬沙": 30,
+    "强沙尘暴": 31,
+    "霾": 53,
+    "未知": 99,
+    "浓雾": 32,
+    "强浓雾": 49,
+    "中度霾": 54,
+    "重度霾": 55,
+    "严重霾": 56,
+    "轻雾": 57,
+    "大雾": 58,
+    "极端降雨": 301,
+    "雨雪天气": 302
+  }
+  wepy.page({
+    data: {
+      wxpos: null,
+      weatherIcon: '',
+      forecasts: null,
+      wxweather: null,
+      showChart: true,
+      wxweatherjson:'',
+      chartd: null,
+      wxweathernews:{
+        currentNews:'',
+        newsContent:'',
+        json:''
+      },
+      weattabs: {
+        tabs: [{
+            'key': 'tem',
+            'name': '温度',
+            'active': true
+          },
+          {
+            'key': 'humidity',
+            'name': '相对湿度',
+            'active': false
+          },
+          {
+            'key': 'rain',
+            'name': '降雨量',
+            'active': false
+          },
+          {
+            'key': 'windAngle',
+            'name': '风力大小',
+            'active': false
+          }
+        ],
+        tabCons: []
+      },
+      chartPos: [{
+          genre: 'Sports',
+          sold: 275
+        },
+        {
+          genre: 'Strategy',
+          sold: 115
+        },
+        {
+          genre: 'Action',
+          sold: 120
+        },
+        {
+          genre: 'Shooter',
+          sold: 350
+        },
+        {
+          genre: 'Other',
+          sold: 150
+        },
+      ]
+    },
+    computed: {
+      weatherImage() {
+        let methods = this.$app.$options.methods;
+        if (!this.wxweather) return;
+        let dnum = 0;
+        let dictValues = _.values(wdict);
+        let dictKeys = _.keys(wdict);
+        let dstr = methods.getDayStr(this.wxweather.reporttime)
+        this.weatherIcon = methods.getWeatherIcon(this.wxweather);
+        let numk = '';
+        for (let x = 0; x < dictValues.length; x++) {
+          if (dictValues[x].indexOf(this.wxweather.weather) !== -1) {
+            numk = dictKeys[x]
+            break;
+          }
+        }
+        let iconStr = dstr + numk;
+        let iconUrl = `https://yxy311.cn/upload/${iconStr}.png`;
+        return iconUrl;
+      },
+      revertReportTime() {
+        if (this.wxweather && this.wxweather.reporttime) {
+          const origitime = new Date(this.wxweather.reporttime)
+          return origitime.toLocaleTimeString('it-IT')
+        }
+        return '';
+      },
+    },
+    methods: {
+      tabClick(index, tab) {
+        let self=this;
+        if (tab.active) return;
+        this.showChart = false;
+        _.each(this.weattabs.tabs, (t) => {
+          t.active = false
+        })
+        this.weattabs.tabs[index].active = true;
+        switch (tab.key) {
+          case 'tem':
+            setTimeout(function () {
+              self.showChart = true;
+              self.drawTemp(self.chartdata.data, self.chartdata.tem)
+            }, 0)
+            break;
+          case 'humidity':
+            setTimeout(function () {
+              self.showChart = true;
+              self.drawHumidity(self.chartdata.data, self.chartdata.humidity)
+            }, 0)
+            break;
+          case 'rain':
+            setTimeout(function () {
+              self.showChart = true;
+              self.drawRain(self.chartdata.data, self.chartdata.rain)
+            }, 0)
+            break;
+          case 'windAngle':
+            setTimeout(function () {
+              self.showChart = true;
+              self.drawWindAngle(self.chartdata.data, self.chartdata.windAngle)
+            }, 0)
+            break;
+        }
+        console.warn(tab);
+      },
+      convertwxweather(){
+        return JSON.stringify(this.wxweather)
+      },
+      drawTemp(xdata, ydata) {
+        this.chartd = new Charts({
+          canvasId: 'canvas3',
+          dataPointShape: "circle",
+          type: 'line',
+          extra: {
+            lineStyle: 'curve' //线条的形状（弧形）
+          },
+          categories: xdata,
+          series: [{
+            name: '温度',
+            data: ydata
+
+          }],
+          yAxis: {
+            title: '今日温度 (℃)',
+            fontColor: "red",
+            titleFontColor: "red",
+            min: 0,
+            gridColor: "red",
+            format: function (val) {
+              return val;
+            }
+          },
+          width: 365,
+          height: 300,
+          dataLabel: true
+        });
+      },
+      drawHumidity(xdata, ydata) {
+        this.chartd = new Charts({
+          canvasId: 'canvas3',
+
+          type: 'radar',
+          extra: {
+            radar: {
+              max: 150
+            }
+          },
+          categories: xdata,
+          series: [{
+            name: '温度',
+            data: ydata
+
+          }],
+          width: 365,
+          height: 300,
+          dataLabel: true
+        });
+      },
+      drawRain(xdata, ydata) {
+        new Charts({
+          canvasId: 'canvas3',
+          dataPointShape: false,
+          type: 'column',
+          categories: xdata,
+          series: [{
+            name: '雨水量',
+            data: ydata,
+            color: "rgba(0,0,0,0.3)" //支持rgba，但不支持渐变色
+          }],
+          yAxis: {
+            format: function (val) {
+              return val;
+            }
+          },
+          xAxis: {
+            disableGrid: true,
+          },
+          width: 365,
+          height: 300,
+          dataLabel: true,
+          extra: {
+            column: {
+              width: 40 //柱的宽度
+            }
+          }
+        });
+      },
+      drawWindAngle(xdata, ydata) {
+        this.chartd = new Charts({
+          canvasId: 'canvas3',
+          dataPointShape: "circle",
+          type: 'line',
+          extra: {
+            lineStyle: 'curve' //线条的形状（弧形）
+          },
+          categories: xdata,
+          series: [{
+            name: '风的级别',
+            data: ydata
+
+          }],
+          yAxis: {
+            title: '今日风级别',
+            fontColor: "red",
+            titleFontColor: "red",
+            min: 0,
+            gridColor: "red"
+          },
+          width: 365,
+          height: 300,
+          dataLabel: true
+        });
+      },
+      getUpdatedNews(){
+        let self=this;
+        let fn = function(){
+          wx.request({
+            url: 'https://yxy311.cn/wxc/api/news',
+            data: {},
+            header: {
+              'content-type': 'application/json'
+            },
+            success(res) {
+              self.wxweathernews.currentNews=res.data.titles;
+              self.wxweathernews.newsContent=encodeURIComponent(res.data.html);
+              self.wxweathernews.json=JSON.stringify(self.wxweathernews);
+              console.log(res.data, 888888888888888888888)
+            },
+            fail(res) {
+              console.warn(res, 'error444444444444444')
+            },
+            complete(res) {
+              console.warn(res, 444444444444444444)
+            }
+          })
+          setTimeout(fn,30*60*1000)
+        }
+        return fn;
+      },
+      callGDApiByPos(pos) {
+        self = this;
+        let cicleNews=self.getUpdatedNews();
+        console.warn(self.$parent, 55555555555555)
+        this.wxpos = pos;
+        wx.request({
+          url: 'https://yxy311.cn/wxc/api/',
+          data: {
+            'pos': pos
+          },
+          header: {
+            'content-type': 'application/json'
+          },
+          success(res) {
+            self.wxweather = res.data.lives[0];
+            self.forecasts = res.data.forecasts[0].casts;
+            self.chartdata = res.data.weatherres_data;
+            self.drawTemp(self.chartdata.data, self.chartdata.tem)
+            
+            self.wxweatherjson=self.convertwxweather(self.wxweather)
+            self.forecasts.days = ['今天', '明天', '后天', '大后天'];
+            cicleNews()
+            console.log(res.data, 3333333333)
+          },
+          fail(res) {
+            console.warn(res, 'error444444444444444')
+          },
+          complete(res) {
+            console.warn(res, 444444444444444444)
+          }
+        })
+      },
+      getLocationByWx() {
+        let self = this;
+        wx.getLocation({
+          success(res) {
+            const latitude = res.latitude
+            const longitude = res.longitude
+            const speed = res.speed
+            const accuracy = res.accuracy
+            self.callGDApiByPos(`${longitude},${latitude}`)
+          }
+        })
+      },
+      getLocation() {
+        let self = this;
+        wx.getSetting({
+          success(res) {
+            if (!res.authSetting['scope.userLocation']) {
+              wx.authorize({
+                scope: 'scope.userLocation',
+                success() {
+                  this.getLocationByWx()
+                },
+                fail() {
+                  console.warn('process is block by user reject authrize.')
+                }
+              })
+            } else {
+              self.getLocationByWx();
+            }
+          }
+        })
+      }
+    },
+    onLoad(options) {
+      this.getLocation();
+
+    },
+    onShow(options) {
+      //this.getLocation()
+    },
+    onHide() {
+      console.warn('onhide2222222222222222')
+    },
+    onReady() {
+      console.warn('onready222222222222222222')
+    },
+    onError(msg) {
+      console.warn('onError222222222222222222')
+    }
+  })
+
+</script>
+<config>
+  {
+  "navigationBarTitleText": "index1",
+  "usingComponents": {
+  "forecast-weather": "~@/components/forecast-weather",
+  'datec':'~@/components/datec'
+  }
+  }
+</config>

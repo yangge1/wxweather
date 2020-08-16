@@ -1,0 +1,86 @@
+<style lang="less">
+  @import '../style/icon.less';
+  .tseek_weather_date{
+    font-size: 10px;
+    border-radius: 5px;
+text-align: left;
+background: rgba(0,0,0,.1);
+color: #fff;
+padding-left: 5px;
+padding-top: 5px;
+
+
+    .tseek_weather_date_today_gl{
+      margin-top:10rpx;
+    }
+    .nldate-show{
+      display:flex;
+      .tseek_weather_date_today_date{
+        width: 50px;
+        height: 50px;
+        background: rgba(0, 0, 0, 0);
+        line-height: 50px;
+        text-align: center;
+        font-size: 37px;
+        margin: 5px;
+        margin-left: 0px;
+      }
+      .tseek_weather_date_today_nl_div{
+        margin-top:5px;
+        .tseek_weather_date_today_nl{
+          margin-bottom:6px;
+      }
+      }
+      
+    }
+    
+  }
+</style>
+<template>
+  <div class="tseek_weather_date">
+    <div class="tseek_weather_date_today_gl">{{datec.todygl}}</div>
+    <div class="nldate-show">
+      <div class="tseek_weather_date_today_date">{{datec.tday}}</div>
+      <div class="tseek_weather_date_today_nl_div">
+        <div class="tseek_weather_date_today_nl">{{datec.todynl}}</div>
+        <div class="tseek_weather_date_today_nl" v-if="!isShowSimple">{{datec.todynly}}</div>
+        <div class="tseek_weather_date_today_nl" v-if="!isShowSimple">{{datec.todynnlye}}</div>
+      </div>
+    </div>
+    
+    
+  </div>
+    
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import {calendar} from '../lib/calendar.js'
+  const showDatec=()=>{
+    let date=new Date()
+      let datec={};
+      let info=calendar.solar2lunar(date.getFullYear(),date.getMonth()+1,date.getDate())
+      datec.todygl=`${info.cYear}-${info['cMonth']>9?info['cMonth']:'0'+info['cMonth']}-${info['cDay']>9?info['cDay']:'0'+info['cDay']} ${info.ncWeek}`;
+      datec.todynl=`${info.IMonthCn}${info.IDayCn}`;
+      datec.tday=`${info.cDay}`
+      datec.todynly=`${info.gzYear}${info.IDayCn}年 【${info.Animal}年】`;
+      datec.todynnlye=`${info.gzMonth}月 ${info.gzDay}日`
+      return datec;
+  }
+  let datec=showDatec()
+  console.warn(calendar)
+  wepy.component({
+    props:{
+      isShowSimple:Boolean,
+      default:false
+    },
+    data:{
+      datec:datec
+    },
+    onLoad(){
+      console.warn('componentcomponentcomponentcomponent')
+      
+    }
+    
+  })
+</script>

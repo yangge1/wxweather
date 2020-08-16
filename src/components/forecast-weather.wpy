@@ -1,0 +1,41 @@
+<style lang="less">
+  @import '../style/icon.less';
+  .tseek_forecast_weather{
+    font-size:12px;
+    text-align: center;
+    .tseek_forecast_weather_temp{
+      margin-top:10rpx;
+    }
+  }
+</style>
+<template>
+  <div class="tseek_forecast_weather">
+    <div class="tseek_forecast_weather_date">{{getDate}}</div>
+    <div class="tseek_forecast_weather_icon icon_w {{forecast_icon}}"></div>
+    <div class="tseek_forecast_weather_weather">{{forecast.dayweather}}</div>
+    <div class="tseek_forecast_weather_temp">{{forecast.nighttemp}}℃/{{forecast.daytemp}}℃</div>
+  </div>
+    
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  
+  wepy.component({
+    properties: {
+      forecast: Object,
+    },
+    computed:{
+      getDate(){
+        if(!this.forecast) return;
+        let date={'1':'星期一','2':'星期二','3':'星期三','4':'星期四','5':'星期五','6':'星期六','7':'星期日'}
+        return date[this.forecast.week];
+      },
+      forecast_icon(){
+        if(!this.forecast) return;
+        let methods=this.$app.$options.methods;
+        return methods.getWeatherIcon(this.forecast);
+      }
+    }
+  })
+</script>

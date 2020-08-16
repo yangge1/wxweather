@@ -1,0 +1,133 @@
+<style lang="less">
+
+</style>
+
+<script>
+import wepy from '@wepy/core';
+import vuex from '@wepy/x';
+wepy.use(vuex);
+const iconDict={
+    "晴":"00",
+    "多云":"01",
+    "阴":"02",
+    "阵雨":"03",
+    "雷阵雨": "04",
+    "雷阵雨并伴有冰雹": "05",
+    "雨夹雪": "06",
+    "小雨": "07",
+    "中雨": "08",
+    "大雨": "09",
+    "暴雨": "10",
+    "大暴雨": "11",
+    "特大暴雨": "12",
+    "阵雪": "13",
+    "小雪": 14,
+    "中雪": 15,
+    "大雪": 16,
+    "暴雪": 17,
+    "雾": 18,
+    "冻雨": 19,
+    "沙尘暴": 20,
+    "小雨-中雨": 21,
+    "中雨-大雨": 22,
+    "大雨-暴雨": 23,
+    "暴雨-大暴雨": 24,
+    "大暴雨-特大暴雨": 25,
+    "小雪-中雪": 26,
+    "中雪-大雪": 27,
+    "大雪-暴雪": 28,
+    "浮尘": 29,
+    "扬沙": 30,
+    "强沙尘暴": 31,
+    "霾": 53,
+    "未知": 99,
+    "浓雾": 32,
+    "强浓雾": 49,
+    "中度霾": 54,
+    "重度霾": 55,
+    "严重霾": 56,
+    "轻雾": 57,
+    "大雾": 58,
+    "极端降雨": 301,
+    "雨雪天气": 302
+}
+wepy.app({
+    data:{
+      testtest:'testtest'
+    },
+    methods:{
+      getDayStr(reporttime){
+        let dtime=new Date(reporttime);
+        let h=dtime.getHours();
+        
+        let dstr='';
+        if(h>=18||h<=6){
+          dstr='n'
+        }else{
+          dstr='d'
+        }
+        return dstr;
+      },
+      getWeatherIcon(weather){
+        if(!weather) return;
+        let dstr=this.getDayStr(weather.reporttime)
+        let weicon=iconDict[weather.weather||weather.dayweather]
+        return dstr+weicon;
+      }
+    },
+    onLaunch(options){
+      
+    },
+    onShow(options){
+      console.warn('onShow',11111111)
+    },
+    onHide(){
+      console.warn('onHide',11111111)
+    },
+    onError(msg){
+      console.warn('onError',11111111)
+    },
+    gloabalData:{
+
+    }
+})
+</script>
+<config>
+{
+    pages: [
+      'pages/index1',
+      'pages/index2',
+      'pages/index3',
+      'pages/news'
+    ],
+    permission:{
+      'scope.userLocation':{
+        "desc": "你的位置信息将用于小程序位置接口的效果展示"
+      }
+    },
+    tabBar:{
+      color:'#00f',
+      selectedColor:'#f00',
+      list:[
+        {
+          'iconPath':'./static/images/rain.png',
+          'pagePath':'pages/index1',
+          'selectedIconPath':'./static/images/rain.png',
+          'text':'天气'
+        },
+        {
+          'iconPath':'./static/images/boy.png',
+          'pagePath':'pages/index3',
+          'selectedIconPath':'./static/images/boy.png',
+          'text':'科技'
+        }
+      ]
+    },
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+}
+</config>

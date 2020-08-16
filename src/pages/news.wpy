@@ -1,0 +1,68 @@
+<style lang="less">
+.tseek-news-box{
+    padding:10px;
+    .nd-head{
+    border-bottom: 1px solid #e3e3e3;
+    padding-bottom: 30px;
+    .head-title{
+        font-size: 24px;
+    font-weight: bold;
+    padding: 0px 5px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    color: #333;
+    background: #fff;
+    }
+    .head-time, .head-referer{
+            font-size: 14px;
+    color: #888;
+    }
+    .head-referer{
+        margin-left:10px;
+    }
+}
+.nd-body{
+    .acticle-p{
+    color: #333;
+    font-size: 20px;
+    line-height: 1.7;
+    margin-top: 10px!important;
+    }
+    .aticle-img{
+        position: relative;
+    width: 100%;
+    display: block;
+    }
+}
+}
+
+
+</style>
+<template>
+    <div class="tseek-news-box">
+        
+        <rich-text :nodes="htmlSnip"></rich-text>
+    </div>
+    
+</template> 
+<script>
+    import wepy from '@wepy/core';
+    wepy.page({
+        data:{htmlSnip:''},
+        onLoad(options){
+            this.htmlSnip=decodeURIComponent(options.html);
+            let reg=new RegExp('<p ','ig')
+            this.htmlSnip=this.htmlSnip.replace(reg,'<p class="acticle-p"').replace(/<img /ig,'<img class="aticle-img"');
+            
+            //console.warn(options.htmlSnip)
+        }
+    })
+</script>
+<config>
+{
+  "navigationBarTitleText": "news",
+  "usingComponents": {
+    
+  }
+}
+</config>

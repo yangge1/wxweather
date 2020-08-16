@@ -1,0 +1,237 @@
+<style lang="less">
+  @import '../style/icon.less';
+
+  .tseek_index1 {
+
+    .tseek_body {
+      padding: 10rpx;
+      padding-top: 20rpx;
+      background-image: url(https://yxy311.cn/upload/ybg.png);
+      background-position: 0 0;
+      background-repeat: no-repeat;
+      background-size: 750rpx 665rpx;
+      height: 665rpx;
+      .date_component{
+        width:154px;
+        position: absolute;
+        right:10px;
+        top:40px;
+      }
+
+      .tseek_locate {
+        .tseek_locate_text {
+          display: flex;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          font-size: 12px;
+
+          view {
+            color: #fff;
+            margin-left: 10rpx;
+
+            &.tseek_icon_bg_i_dropdown {
+              margin-top: 8rpx;
+            }
+
+            &.tseek_weather_time_txt {
+              margin-left: 25rpx;
+              color: rgba(255, 255, 255, .5)
+            }
+
+            &.tseek_icon_bg_i_refresh {
+              margin-top: 4rpx;
+
+            }
+          }
+        }
+      }
+
+      .tseek_weather {
+        color: #fff;
+        font-size:12px;
+
+        .tseek_weather_info {
+          color: #fff;
+          display: flex;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+
+          .tseek_weather_info_temp {
+            font-size: 180rpx;
+            margin-left: 20rpx;
+          }
+
+          .tseek_weather_info_temp_sign {
+            margin-top: 20rpx;
+            margin-left: -17rpx;
+            font-size: 25px;
+
+          }
+
+          .tseek_weather_info_temp_wt {
+            margin-top: 148rpx;
+            margin-left: -28rpx;
+
+          }
+
+          .tseek_weather_info_temp_sign1 {
+            margin-top: 153rpx;
+            margin-left: 21rpx;
+
+          }
+
+        }
+      }
+    }
+  }
+
+</style>
+<template>
+  <div class="tseek_index1">
+    <div class="tseek_body" style="background-image:url({{weatherImage}})">
+      <div class="date_component">
+        <datec isShowSimple="true"></datec>
+      </div>
+      <div class="tseek_locate">
+        <span class="tseek_locate_text">
+          <i class="icon icon_bg_i_loca"></i>
+          <em>{{wxweather.province}}</em><em>{{wxweather.city}}</em>
+          <view class="icon icon_bg_i_dropdown tseek_icon_bg_i_dropdown"></view>
+          <view class="tseek_weather_time_txt">{{revertReportTime}} 更新</view>
+        </span>
+      </div>
+      <div class="tseek_weather">
+        <div class="tseek_weather_info">
+          <view class="tseek_weather_info_temp">{{wxweather.temperature}}</view>
+          <view class="tseek_weather_info_temp_sign">℃</view>
+
+          <view class="tseek_weather_info_temp_wt">{{wxweather.weather}}</view>
+          
+        </div>
+        <div class="tseek_tody_weather">
+          <div class="tseek_tody_weather_div_icon">
+            <i class="icon_w {{weatherIcon}} size_page1_class"></i>
+          </div>
+          <div class="tseek_tody_weather_div_rect">
+            <span>{{wxweather.winddirection}}风 {{wxweather.windpower}}级</span>
+          </div>
+          <div class="tseek_tody_weather_div_rect">
+            <span>相对湿度 {{wxweather.humidity}}</span>
+          </div>
+        </div>
+        <div class="tseek_tody_weather2_info">
+            <div v-for="info in dayinfo.jiagshui" class="tseek_tody_weather2_info_item">
+              <div class="image-src">{{info.img}}</div>
+              <div class="image-src">{{info.name}}</div>
+              <div class="image-src">{{info.time}}</div>
+            </div>
+        </div>
+        <div class="tseek_tody_weather2_info_sh">
+          <div v-for="sh in dayinfo.zhishus" class="tseek_tody_weather2_info_item">
+            <div class="image-src">{{sh.iconcls}}</div>
+            <div class="image-src">{{sh.title}}</div>
+            <div class="image-src">{{sh.name}}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</template>
+<script>
+  import wepy from '@wepy/core';
+  import _ from '../lib/underscore.min.js';
+  const wdict = {
+    '00': ['晴', '晴间多云', '和风', '有风'],
+    '01': ['少云', '多云', '平静', '微风', '清风', '强风/劲风', '疾风', '大风', '烈风'],
+    '02': ['阴', '风暴', '狂爆风', '飓风', '热带风暴', '霾', '中度霾', '重度霾', '严重霾'],
+    '03': ['阵雨', '小雨', '中雨', '大雨', '暴雨', '大暴雨', '特大暴雨', '强阵雨', '极端降雨', '毛毛雨/细雨', '雨', '小雨-中雨', '中雨-大雨', '大雨-暴雨',
+      '暴雨-大暴雨', '大暴雨-特大暴雨', '雨雪天气'
+    ],
+    '04': ['雷阵雨', '雷阵雨并伴有冰雹', '强雷阵雨', '雨夹雪', '阵雨夹雪', '冻雨']
+  }
+  wepy.page({
+    data: {
+      weatherIcon: '',
+      wxweather: null,
+      dayinfo:null
+    },
+    computed: {
+      weatherImage() {
+        let methods = this.$app.$options.methods;
+        if (!this.wxweather) return;
+        let dnum = 0;
+        let dictValues = _.values(wdict);
+        let dictKeys = _.keys(wdict);
+        let dstr = methods.getDayStr(this.wxweather.reporttime)
+        this.weatherIcon = methods.getWeatherIcon(this.wxweather);
+        let numk = '';
+        for (let x = 0; x < dictValues.length; x++) {
+          if (dictValues[x].indexOf(this.wxweather.weather) !== -1) {
+            numk = dictKeys[x]
+            break;
+          }
+        }
+        let iconStr = dstr + numk;
+        let iconUrl = `https://yxy311.cn/upload/${iconStr}.png`;
+        return iconUrl;
+      },
+      revertReportTime() {
+        if (this.wxweather && this.wxweather.reporttime) {
+          const origitime = new Date(this.wxweather.reporttime)
+          return origitime.toLocaleTimeString('it-IT')
+        }
+        return '';
+      },
+    },
+    methods: {
+      callGDApiByPos() {
+        self = this;
+        wx.request({
+          url: 'https://yxy311.cn/wxc/api/getdayinfo',
+          header: {
+            'content-type': 'application/json'
+          },
+          success(res) {
+            self.dayinfo = res.data;
+
+          },
+          fail(res) {
+            console.warn(res, 'error444444444444444')
+          },
+          complete(res) {
+            console.warn(res, 444444444444444444)
+          }
+        })
+      }
+    },
+    onLoad(options) {
+      console.error(options.wxweather)
+      if(_.isEmpty(options.wxweather)) return;
+      this.wxweather=JSON.parse(options.wxweather);
+      this.callGDApiByPos();
+    },
+    onShow(options) {
+      //this.getLocation()
+    },
+    onHide() {
+      console.warn('onhide2222222222222222')
+    },
+    onReady() {
+      console.warn('onready222222222222222222')
+    },
+    onError(msg) {
+      console.warn('onError222222222222222222')
+    }
+  })
+
+</script>
+<config>
+  {
+  "navigationBarTitleText": "index2",
+  "usingComponents": {
+
+  }
+  }
+</config>
