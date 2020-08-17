@@ -8,6 +8,14 @@ background: rgba(0,0,0,.1);
 color: #fff;
 padding-left: 5px;
 padding-top: 5px;
+&.is-simple{
+  background: none;
+  .nldate-show .tseek_weather_date_today_nl_div .tseek_weather_date_today_nl{
+    position: absolute;
+            top: 10px;
+            right: 8px;
+  }
+}
 
 
     .tseek_weather_date_today_gl{
@@ -37,10 +45,10 @@ padding-top: 5px;
   }
 </style>
 <template>
-  <div class="tseek_weather_date">
+  <div class="tseek_weather_date" :class="{'is-simple':isShowSimple}">
     <div class="tseek_weather_date_today_gl">{{datec.todygl}}</div>
     <div class="nldate-show">
-      <div class="tseek_weather_date_today_date">{{datec.tday}}</div>
+      <div v-if="!isShowSimple" class="tseek_weather_date_today_date">{{datec.tday}}</div>
       <div class="tseek_weather_date_today_nl_div">
         <div class="tseek_weather_date_today_nl">{{datec.todynl}}</div>
         <div class="tseek_weather_date_today_nl" v-if="!isShowSimple">{{datec.todynly}}</div>

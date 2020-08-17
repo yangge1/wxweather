@@ -14,8 +14,8 @@
       .date_component{
         width:154px;
         position: absolute;
-        right:10px;
-        top:40px;
+        right:3px;
+        top:3px;
       }
 
       .tseek_locate {
@@ -52,25 +52,30 @@
 
         .tseek_weather_info {
           color: #fff;
-          display: flex;
-          flex-wrap: nowrap;
-          justify-content: flex-start;
+text-align: center;
 
           .tseek_weather_info_temp {
             font-size: 180rpx;
             margin-left: 20rpx;
+            display: inline-block;
+
           }
 
           .tseek_weather_info_temp_sign {
-            margin-top: 20rpx;
-            margin-left: -17rpx;
             font-size: 25px;
+display: inline-block;
+margin-top: 23rpx;
+vertical-align: top;
+
 
           }
 
           .tseek_weather_info_temp_wt {
             margin-top: 148rpx;
-            margin-left: -28rpx;
+margin-left: -28rpx;
+display: inline-block;
+font-size: 24px;
+
 
           }
 
@@ -137,7 +142,6 @@
         <span class="tseek_locate_text">
           <i class="icon icon_bg_i_loca"></i>
           <em>{{wxweather.province}}</em><em>{{wxweather.city}}</em>
-          <view class="icon icon_bg_i_dropdown tseek_icon_bg_i_dropdown"></view>
           <view class="tseek_weather_time_txt">{{revertReportTime}} 更新</view>
         </span>
       </div>
@@ -149,7 +153,7 @@
           <view class="tseek_weather_info_temp_wt">{{wxweather.weather}}</view>
           
         </div>
-        <div class="tseek_tody_weather2_info">
+        <div class="tseek_tody_weather2_info" v-show="!isShowLoading">
             <div v-for="info in dayinfo.jiagshui" class="tseek_tody_weather2_info_item">
               <div class="jiagshui-div jiagshui-img">
                 <img src="{{info.img}}" alt=""/>             
@@ -161,7 +165,7 @@
               
             </div>
         </div>
-        <div class="tseek_tody_weather2_info_sh">
+        <div class="tseek_tody_weather2_info_sh" v-show="!isShowLoading">
           <div v-for="sh in dayinfo.zhishus" class="tseek_tody_weather2_info_item">
             <div class="zhishus-icon icon_info {{sh.iconcls}} {{sh.picon}}"></div>
             <div class="zhishus-div">
@@ -171,6 +175,9 @@
             
           </div>
         </div>
+        <view class="weui-loading__wrp" v-show="isShowLoading">
+          <view class="weui-loading"></view>
+        </view>
       </div>
 
     </div>
@@ -193,6 +200,7 @@
     data: {
       weatherIcon: '',
       wxweather: null,
+      isShowLoading:true,
       dayinfo:null
     },
     computed: {
@@ -245,12 +253,12 @@
           },
           complete(res) {
             console.warn(res, 444444444444444444)
+            self.isShowLoading=false
           }
         })
       }
     },
     onLoad(options) {
-      console.error(options.wxweather)
       if(_.isEmpty(options.wxweather)) return;
       this.wxweather=JSON.parse(options.wxweather);
       this.callGDApiByPos();
@@ -274,7 +282,10 @@
   {
   "navigationBarTitleText": "index2",
   "usingComponents": {
-
+    'datec':'~@/components/datec'
+  },
+  "useExtendedLib": {
+    "weui": true
   }
   }
 </config>

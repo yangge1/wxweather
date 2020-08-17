@@ -166,8 +166,9 @@
 
 </style>
 <template>
+<view data-weui-theme="dark"></view>
   <div class="tseek_index1">
-    <div class="tseek_body" style="background-image:url({{weatherImage}})">
+    <div class="tseek_body" v-show="!isShowLoading" style="background-image:url({{weatherImage}})">
       <div class="date_component">
         <datec></datec>
       </div>
@@ -175,7 +176,6 @@
         <span class="tseek_locate_text">
           <i class="icon icon_bg_i_loca"></i>
           <em>{{wxweather.province}}</em><em>{{wxweather.city}}</em>
-          <view class="icon icon_bg_i_dropdown tseek_icon_bg_i_dropdown"></view>
           <view class="tseek_weather_time_txt">{{revertReportTime}} 更新</view>
           <i class="icon icon_bg_i_refresh tseek_icon_bg_i_refresh"></i>
         </span>
@@ -230,6 +230,7 @@
       </div>
 
     </div>
+    <mp-loading type="circle" show="{{isShowLoading}}"></mp-loading>
   </div>
 
 </template>
@@ -295,6 +296,7 @@
   wepy.page({
     data: {
       wxpos: null,
+      isShowLoading:true,
       weatherIcon: '',
       forecasts: null,
       wxweather: null,
@@ -569,12 +571,15 @@
             
             self.wxweatherjson=self.convertwxweather(self.wxweather)
             self.forecasts.days = ['今天', '明天', '后天', '大后天'];
+            self.isShowLoading=false;
             cicleNews()
           },
           fail(res) {
             console.warn(res, 'error444444444444444')
           },
           complete(res) {
+            wx.hideLoading()
+            self.isShowLoading=false;
             console.warn(res, 444444444444444444)
           }
         })
@@ -613,13 +618,16 @@
       }
     },
     onLoad(options) {
+      wx.showLoading({title: '加载中', icon: 'loading'})
       this.getLocation();
 
     },
     onShow(options) {
-      //this.getLocation()
+     // this.isShowLoading=true;
+    //  this.getLocation()
     },
     onHide() {
+     // this.isShowLoading=false;
       console.warn('onhide2222222222222222')
     },
     onReady() {

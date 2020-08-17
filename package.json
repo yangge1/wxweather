@@ -4,7 +4,7 @@
   "description": "A WePY project",
   "main": "weapp/app.js",
   "scripts": {
-    "dev": "./node_modules/.bin/wepy build --watch",
+    "dev": "wepy build --watch",
     "build": "cross-env NODE_ENV=production ./node_modules/.bin/wepy build --no-cache",
     "clean": "rm -rf weapp",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,7 @@
     "@wepy/x": "^2.0.2",
     "axios": "^0.19.2",
     "miniprogram-slide-view": "0.0.3",
+    "miniprogram-sm-crypto": "^0.1.2",
     "rimraf": "^3.0.2",
     "wepy-plugin-axios": "^0.1.8"
   },
@@ -40,5 +41,14 @@
     "eslint-plugin-standard": "^2.0.1",
     "less": "^3.8.1",
     "wepy-eslint": "^1.5.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yangge1/wxweather.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/yangge1/wxweather/issues"
+  },
+  "homepage": "https://github.com/yangge1/wxweather#readme"
 }
